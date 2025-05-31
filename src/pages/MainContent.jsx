@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Button } from "react-bootstrap";
 import HomeCard from "../components/HomeCard";
 
 const MainContent = ({ onHomeClick }) => {
+    const [profiles, setProfiles] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProfiles = async () => {
+            try {
+                const response = await axios.get(
+                    'http://localhost:5295/api/Profile?IsActive=true&PageNumber=1&ItemsPerPage=100'
+                );
+                setProfiles(response.data.items);
+            } catch (error) {
+                console.error('Failed to fetch profiles:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProfiles();
+    }, []);
+
+    if (loading) {
+        return <div className="p-4 text-center">Loading profiles...</div>;
+    }
+    
+    console.log("->", profiles)
     const homes = [
         {
             name: "Elizabeth Washington",
@@ -30,9 +56,11 @@ const MainContent = ({ onHomeClick }) => {
                 <Button variant="outline-primary">Online</Button>
                 <Button variant="outline-primary">Pay is &lt;=$40/hr</Button>
             </div>
-            {homes.map((t, i) => (
+            {/* {homes.map((t, i) => (
                 <HomeCard home={t} key={i} onClick={onHomeClick} />
-            ))}
+            ))} */}
+
+                <HomeCard profiles={profiles}  onClick={onHomeClick} />
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, ListGroup } from "react-bootstrap";
 
-const Sidebar = () => (
+const Sidebar = ({ onMenuClick }) => (
   <div className="bg-primary text-white p-3 h-100">
     <div className="mb-4">
       <h5 className="fw-bold">HOMEhub</h5>
@@ -17,22 +17,15 @@ const Sidebar = () => (
       <small>8th grade</small>
     </div>
     <Nav className="flex-column">
-      <Nav.Link className="text-white">Schedule</Nav.Link>
-      <Nav.Link className="text-white">Grades</Nav.Link>
-      <Nav.Link className="text-white fw-bold">Homes</Nav.Link>
+      <Nav.Link className="text-white" onClick={() => onMenuClick("home")}>Schedule</Nav.Link>
+      <Nav.Link className="text-white" onClick={() => onMenuClick("grades")}>Grades</Nav.Link>
+      <Nav.Link className="text-white fw-bold" onClick={() => onMenuClick("homes")}>Homes</Nav.Link>
+      <Nav.Link className="text-white" onClick={() => onMenuClick("videos")}>Videos</Nav.Link>
     </Nav>
     <hr className="border-white" />
     {/* <h6>COURSES</h6>
     <ListGroup variant="flush">
-      {[
-        "Biology",
-        "Algebra I",
-        "American History",
-        "Social Science",
-        "French",
-        "English",
-        "Typing",
-      ].map((course, idx) => (
+      {["Biology", "Algebra I", "American History", "Social Science", "French", "English", "Typing"].map((course, idx) => (
         <ListGroup.Item key={idx} className="bg-transparent text-white px-0">
           {course}
         </ListGroup.Item>

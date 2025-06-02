@@ -17,10 +17,9 @@ const Sidebar = ({ onMenuClick }) => (
       <small>8th grade</small>
     </div>
     <Nav className="flex-column">
-      <Nav.Link className="text-white" onClick={() => onMenuClick("home")}>Schedule</Nav.Link>
-      <Nav.Link className="text-white" onClick={() => onMenuClick("grades")}>Grades</Nav.Link>
       <Nav.Link className="text-white fw-bold" onClick={() => onMenuClick("homes")}>Homes</Nav.Link>
       <Nav.Link className="text-white" onClick={() => onMenuClick("videos")}>Videos</Nav.Link>
+      
     </Nav>
     <hr className="border-white" />
     {/* <h6>COURSES</h6>

@@ -41,7 +41,11 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                     <div key={index}
                         className="bg-white shadow-md rounded-2xl overflow-hidden cursor-pointer"
                     >
-                        <Card className="mb-3 px-5 mx-5" style={{ cursor: "pointer" }}>
+                        <Card
+                            className="mb-3 px-5 mx-5"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => onClick(profile)}
+                        >
                             <Card.Body className="d-flex flex-column flex-md-row px-5 mx-5">
                                 <img
                                     src={`data:image/jpeg;base64,${profile.imageFile}`}
@@ -52,12 +56,12 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                 <div className="flex-fill">
                                     <h4 className="fw-bold mb-1">{profile.name}</h4>
                                     <div className="text-muted mb-2">
-                                        <Badge bg="info">{profile.rating}/5</Badge>
+                                        <Badge bg="info">{profile.rating ?? 'N/A'}/5</Badge>
                                     </div>
                                 </div>
                                 <div className="text-md-end text-start">
                                     <div className="my-2 text-muted small">
-                                        <Badge bg="info">{profile.profileUrl}</Badge>
+                                        <Badge bg="info">{profile.profileUrl || 'No URL'}</Badge>
                                     </div>
 
                                     <Button

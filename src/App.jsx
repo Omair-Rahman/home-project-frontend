@@ -10,16 +10,27 @@ export default function App() {
   const [selectedHome, setSelectedHome] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
   const [page, setPage] = useState("homes");
+  const [profileId, setProfileId] = useState(null);
 
   const handleHomeClick = (home) => {
     setSelectedHome(home);
-    setShowDetail(true);
+    setProfileId(home.id);
+    setPage("videos");
+    setShowDetail(false);
   };
 
   const handleClose = () => setShowDetail(false);
 
+  const handleMenuClick = (menuKey) => {
+    setPage(menuKey);
+    if (menuKey === "videos") {
+      setProfileId(null);
+    }
+    setShowDetail(false);
+  };
+
   const renderContent = () => {
-    if (page === "videos") return <VideoPage />;
+    if (page === "videos") return <VideoPage profileId={profileId} />;
     return <MainContent onHomeClick={handleHomeClick} />;
   };
 
@@ -33,7 +44,7 @@ export default function App() {
           {renderContent()}
         </Col>
       </Row>
-      <HomeDetailPanel show={showDetail} onHide={handleClose} home={selectedHome} />
+      {/* <HomeDetailPanel show={showDetail} onHide={handleClose} home={selectedHome} /> */}
     </Container>
   );
 }

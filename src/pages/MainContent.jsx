@@ -53,10 +53,7 @@ const MainContent = ({ onHomeClick }) => {
             IsActive: true
         });
     };
-
-    console.log("<>", profiles);
-
-
+    
     return (
         <div className="p-4">
             <h5 className="fw-bold mb-4">Let's find a home feature...</h5>

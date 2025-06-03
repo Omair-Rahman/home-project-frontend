@@ -16,7 +16,7 @@ const Sidebar = ({ onMenuClick }) => (
       <div>Michelle</div>
       <small>8th grade</small>
     </div>
-    <Nav className="flex-column">
+    <Nav className="flex-column p-3">
       <Nav.Link
         className="text-uppercase text-white fw-bold"
         onClick={() => onMenuClick("homes")}>

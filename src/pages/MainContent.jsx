@@ -9,18 +9,23 @@ const MainContent = ({ onHomeClick }) => {
     const [profiles, setProfiles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
-    const [pageNumber, setPageNumber] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
+    const [queryParams, setQueryParams] = useState({
+        Name: '',
+        Rating: '',
+        PageNumber: 1,
+        ItemsPerPage: 10,
+        IsActive: true
+    });
 
     const fetchProfiles = async () => {
         setLoading(true);
         try {
             const response = await axios.get('http://localhost:5295/api/Profile', {
                 params: {
-                    IsActive: true,
-                    PageNumber: pageNumber,
-                    ItemsPerPage: itemsPerPage
+                    ...queryParams,
+                    Name: queryParams.Name || undefined,
+                    Rating: queryParams.Rating || undefined
                 }
             });
 
@@ -36,13 +41,21 @@ const MainContent = ({ onHomeClick }) => {
 
     useEffect(() => {
         fetchProfiles();
-    }, [pageNumber, itemsPerPage]);
+    }, [queryParams]);
+
 
     const resetPagination = () => {
-        setPageNumber(1);
-        setItemsPerPage(10);
-        setTimeout(fetchProfiles, 0);
+        setQueryParams({
+            Name: '',
+            Rating: '',
+            PageNumber: 1,
+            ItemsPerPage: 10,
+            IsActive: true
+        });
     };
+
+    console.log("<>", profiles);
+
 
     return (
         <div className="p-4">
@@ -69,14 +82,39 @@ const MainContent = ({ onHomeClick }) => {
                 transition={{ duration: 0.4 }}
             >
                 <div className="d-flex align-items-center gap-2">
+                    <Form.Control
+                        type="text"
+                        placeholder="Search by name"
+                        value={queryParams.Name}
+                        onChange={(e) =>
+                            setQueryParams((prev) => ({ ...prev, Name: e.target.value }))
+                        }
+                    />
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                    <Form.Control
+                        type="text"
+                        placeholder="Rating"
+                        min="1"
+                        max="5"
+                        value={queryParams.Rating}
+                        onChange={(e) =>
+                            setQueryParams((prev) => ({ ...prev, Rating: e.target.value }))
+                        }
+                    />
+                </div>
+                <div className="d-flex align-items-center gap-2">
                     <Form.Label className="mb-0 fw-semibold">Items per page:</Form.Label>
                     <Form.Select
                         style={{ width: "100px", minWidth: "100px" }}
-                        value={itemsPerPage}
-                        onChange={(e) => {
-                            setItemsPerPage(parseInt(e.target.value));
-                            setPageNumber(1); // reset to page 1 on change
-                        }}
+                        value={queryParams.ItemsPerPage}
+                        onChange={(e) =>
+                            setQueryParams((prev) => ({
+                                ...prev,
+                                ItemsPerPage: parseInt(e.target.value),
+                                PageNumber: 1
+                            }))
+                        }
                     >
                         <option value={5}>5</option>
                         <option value={10}>10</option>
@@ -102,28 +140,35 @@ const MainContent = ({ onHomeClick }) => {
 
                 <div className="ms-auto d-flex align-items-center gap-2">
                     <Button
-                        variant="outline-secondary"
-                        disabled={pageNumber === 1}
-                        className="text-uppercase fw-bold"
-                        onClick={() => setPageNumber(prev => Math.max(1, prev - 1))}
+                        disabled={queryParams.PageNumber === 1}
+                        onClick={() =>
+                            setQueryParams((prev) => ({
+                                ...prev,
+                                PageNumber: Math.max(1, prev.PageNumber - 1)
+                            }))
+                        }
                     >
                         &laquo; Previous
                     </Button>
                     <motion.span
-                        key={pageNumber}
+                        key={queryParams.PageNumber}
                         className="text-uppercase fw-bold px-3"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
                     >
-                        Page {pageNumber}
+                        Page {queryParams.PageNumber} of {totalPages}
                     </motion.span>
                     <Button
-                        variant="outline-secondary"
-                        className="text-uppercase fw-bold"
-                        disabled={pageNumber >= totalPages}
-                        onClick={() => setPageNumber(prev => prev + 1)}
+                        disabled={queryParams.PageNumber >= totalPages}
+                        onClick={() =>
+                            setQueryParams((prev) => ({
+                                ...prev,
+                                PageNumber: prev.PageNumber + 1
+                            }))
+                        }
                     >
+
                         Next &raquo;
                     </Button>
                 </div>
@@ -131,6 +176,8 @@ const MainContent = ({ onHomeClick }) => {
 
             {loading ? (
                 <Spinner animation="border" />
+            ) : profiles.length === 0 ? (
+                <div className="text-muted mt-3">No profiles found.</div>
             ) : (
                 <HomeCard
                     profiles={profiles}

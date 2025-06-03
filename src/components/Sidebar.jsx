@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav, ListGroup } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 
 const Sidebar = ({ onMenuClick }) => (
   <div className="bg-primary text-white p-3 h-100">
@@ -17,19 +17,19 @@ const Sidebar = ({ onMenuClick }) => (
       <small>8th grade</small>
     </div>
     <Nav className="flex-column">
-      <Nav.Link className="text-white fw-bold" onClick={() => onMenuClick("homes")}>Homes</Nav.Link>
-      <Nav.Link className="text-white" onClick={() => onMenuClick("videos")}>Videos</Nav.Link>
-      
+      <Nav.Link
+        className="text-uppercase text-white fw-bold"
+        onClick={() => onMenuClick("homes")}>
+        Homes
+      </Nav.Link>
+      <Nav.Link
+        className="text-uppercase text-white fw-bold"
+        onClick={() => onMenuClick("videos")}>
+        Videos
+      </Nav.Link>
+
     </Nav>
     <hr className="border-white" />
-    {/* <h6>COURSES</h6>
-    <ListGroup variant="flush">
-      {["Biology", "Algebra I", "American History", "Social Science", "French", "English", "Typing"].map((course, idx) => (
-        <ListGroup.Item key={idx} className="bg-transparent text-white px-0">
-          {course}
-        </ListGroup.Item>
-      ))}
-    </ListGroup> */}
   </div>
 );
 

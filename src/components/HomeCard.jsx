@@ -63,7 +63,7 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                     <Button
                                         variant="outline-warning"
                                         size="sm"
-                                        className="mt-2 text-muted small"
+                                        className="mt-2 text-uppercase fw-bold me-2"
                                         onClick={() => handleEditClick(profile)}
                                     >
                                         Edit
@@ -71,6 +71,7 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                     <Button
                                         variant="outline-danger"
                                         size="sm"
+                                        className="mt-2 text-uppercase fw-bold me-2"
                                         onClick={() => handleDeleteClick(profile)}
                                     >
                                         Delete

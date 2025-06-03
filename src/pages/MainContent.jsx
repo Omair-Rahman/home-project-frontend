@@ -48,7 +48,10 @@ const MainContent = ({ onHomeClick }) => {
         <div className="p-4">
             <h5 className="fw-bold mb-4">Let's find a home feature...</h5>
             <div className="p-2">
-                <Button variant="outline-primary" onClick={() => setShowModal(true)}>
+                <Button
+                    variant="outline-primary"
+                    className="text-uppercase fw-bold"
+                    onClick={() => setShowModal(true)}>
                     Create Profile
                 </Button>
             </div>
@@ -83,10 +86,16 @@ const MainContent = ({ onHomeClick }) => {
                 </div>
 
                 <div className="d-flex gap-2">
-                    <Button variant="outline-primary" onClick={resetPagination}>
+                    <Button
+                        variant="outline-primary"
+                        className="text-uppercase fw-bold"
+                        onClick={resetPagination}>
                         Reset
                     </Button>
-                    <Button variant="outline-success" onClick={fetchProfiles}>
+                    <Button
+                        variant="outline-success"
+                        className="text-uppercase fw-bold"
+                        onClick={fetchProfiles}>
                         Refresh
                     </Button>
                 </div>
@@ -95,13 +104,14 @@ const MainContent = ({ onHomeClick }) => {
                     <Button
                         variant="outline-secondary"
                         disabled={pageNumber === 1}
+                        className="text-uppercase fw-bold"
                         onClick={() => setPageNumber(prev => Math.max(1, prev - 1))}
                     >
                         &laquo; Previous
                     </Button>
                     <motion.span
                         key={pageNumber}
-                        className="fw-bold px-3"
+                        className="text-uppercase fw-bold px-3"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
@@ -110,6 +120,7 @@ const MainContent = ({ onHomeClick }) => {
                     </motion.span>
                     <Button
                         variant="outline-secondary"
+                        className="text-uppercase fw-bold"
                         disabled={pageNumber >= totalPages}
                         onClick={() => setPageNumber(prev => prev + 1)}
                     >

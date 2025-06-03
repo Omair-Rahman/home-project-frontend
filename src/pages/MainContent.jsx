@@ -110,6 +110,7 @@ const MainContent = ({ onHomeClick }) => {
                     </motion.span>
                     <Button
                         variant="outline-secondary"
+                        disabled={pageNumber >= totalPages}
                         onClick={() => setPageNumber(prev => prev + 1)}
                     >
                         Next &raquo;
@@ -120,7 +121,11 @@ const MainContent = ({ onHomeClick }) => {
             {loading ? (
                 <Spinner animation="border" />
             ) : (
-                <HomeCard profiles={profiles} onClick={onHomeClick} />
+                <HomeCard
+                    profiles={profiles}
+                    onClick={onHomeClick}
+                    onProfileUpdated={fetchProfiles}
+                />
             )}
         </div>
     );

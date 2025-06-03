@@ -1,14 +1,37 @@
 import React, { useState } from 'react';
 import { Card, Badge, Button } from "react-bootstrap";
 import UpdateProfileModal from "../components/UpdateProfileModal";
+import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
+import axios from 'axios';
 
 const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [profileToDelete, setProfileToDelete] = useState(null);
+
 
     const handleEditClick = (profile) => {
         setSelectedProfile(profile);
         setShowUpdateModal(true);
+    };
+
+    const handleDeleteClick = (profile) => {
+        setProfileToDelete(profile);
+        setShowDeleteModal(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!profileToDelete) return;
+        try {
+            const response = await axios.delete(`http://localhost:5295/api/Profile/${profileToDelete.id}`);
+            onProfileUpdated();
+        } catch (error) {
+            console.error('Error deleting profile:', error);
+        } finally {
+            setShowDeleteModal(false);
+            setProfileToDelete(null);
+        }
     };
 
     return (
@@ -45,6 +68,13 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                     >
                                         Edit
                                     </Button>
+                                    <Button
+                                        variant="outline-danger"
+                                        size="sm"
+                                        onClick={() => handleDeleteClick(profile)}
+                                    >
+                                        Delete
+                                    </Button>
                                 </div>
                             </Card.Body>
                         </Card>
@@ -63,6 +93,13 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                     }}
                 />
             )}
+
+            <ConfirmDeleteModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                handleConfirm={confirmDelete}
+                profileName={profileToDelete?.name}
+            />
         </>
     );
 };

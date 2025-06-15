@@ -1,0 +1,7 @@
+import '../styles/css/Loading.css';
+
+const Loading = () => {
+  return <div class="spinner"></div>;
+};
+
+export default Loading;

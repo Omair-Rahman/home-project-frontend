@@ -1,5 +1,6 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
+import JellyfishSpinner from '../components/JellyfishSpinner';
 
 const Sidebar = ({ onMenuClick }) => (
   <div className="bg-primary text-white p-3 h-100">
@@ -7,15 +8,9 @@ const Sidebar = ({ onMenuClick }) => (
       <h5 className="fw-bold">HOMEhub</h5>
     </div>
     <div className="mb-3">
-      <img
-        src="https://randomuser.me/api/portraits/women/1.jpg"
-        alt="Michelle"
-        className="rounded-circle mb-2"
-        width="50"
-      />
-      <div>Michelle</div>
-      <small>8th grade</small>
+      <JellyfishSpinner />
     </div>
+    <hr className="border-white" />
     <Nav className="flex-column p-3">
       <Nav.Link
         className="text-uppercase text-white fw-bold"

@@ -7,14 +7,17 @@ const Sidebar = ({ onMenuClick }) => (
     <div className="mb-4">
       <h5 className="fw-bold">HOMEhub</h5>
     </div>
-    <div className="mb-3">
+    <div className="mb-3 d-flex justify-content-center">
       <JellyfishSpinner />
     </div>
     <hr className="border-white" />
     <Nav className="flex-column p-3">
       <Nav.Link
         className="text-uppercase text-white fw-bold"
-        onClick={() => onMenuClick("homes")}>
+        onClick={(e) => {
+          e.preventDefault();
+          onMenuClick("homes");
+        }}>
         Homes
       </Nav.Link>
       <Nav.Link

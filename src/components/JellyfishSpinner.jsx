@@ -2,16 +2,16 @@ import '../styles/css/JellyfishSpinner.css';
 
 const JellyfishSpinner = () => {
   return (
-    <div class="whirlpool">
-      <div class="ring ring1"></div>
-      <div class="ring ring2"></div>
-      <div class="ring ring3"></div>
-      <div class="ring ring4"></div>
-      <div class="ring ring5"></div>
-      <div class="ring ring6"></div>
-      <div class="ring ring7"></div>
-      <div class="ring ring8"></div>
-      <div class="ring ring9"></div>
+    <div className="whirlpool">
+      <div className="ring ring1"></div>
+      <div className="ring ring2"></div>
+      <div className="ring ring3"></div>
+      <div className="ring ring4"></div>
+      <div className="ring ring5"></div>
+      <div className="ring ring6"></div>
+      <div className="ring ring7"></div>
+      <div className="ring ring8"></div>
+      <div className="ring ring9"></div>
     </div>
   );
 };

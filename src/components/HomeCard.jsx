@@ -2,14 +2,21 @@ import React, { useState } from 'react';
 import { Card, Badge, Button } from "react-bootstrap";
 import UpdateProfileModal from "../components/UpdateProfileModal";
 import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
+import HomeDetailPanel from '../components/HomeDetailPanel';
 import axios from 'axios';
 
-const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
+const HomeCard = ({ profiles = [], onProfileClick, onProfileUpdated }) => {
     const [showUpdateModal, setShowUpdateModal] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [profileToDelete, setProfileToDelete] = useState(null);
+    const [showDetail, setShowDetail] = useState(false);
+    const [selectedProfileId, setSelectedProfileId] = useState(null);
 
+    const handleProfileClick = (profile) => {
+        setSelectedProfileId(profile.id);
+        setShowDetail(true);
+    };
 
     const handleEditClick = (profile) => {
         setSelectedProfile(profile);
@@ -39,17 +46,22 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
             {
                 profiles.map((profile, index) => (
                     <div key={index}
-                        className="bg-white shadow-md rounded-2xl overflow-hidden cursor-pointer"
+                        className="bg-white pt-2 shadow-md rounded-2xl overflow-hidden cursor-pointer"
                     >
                         <Card
-                            className="mb-3 px-5 mx-5"
-                            style={{ cursor: "pointer" }}
-                            onClick={() => onClick(profile)}
+                            className="mb-3 px-5 mx-5 hover-shadow"
+                            style={{
+                                cursor: 'pointer',
+                                transition: 'transform 0.2s',
+                            }}
+                            onClick={() => handleProfileClick(profile)}
+                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.01)'}
+                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                         >
                             <Card.Body className="d-flex flex-column flex-md-row px-5 mx-5">
                                 <img
                                     src={`data:image/jpeg;base64,${profile.imageFile}`}
-                                    alt={profile.image}
+                                    alt={profile.name || 'Profile Image'}
                                     className="rounded float-start me-md-3 mb-3 mb-md-0"
                                     width="10%"
                                 />
@@ -68,7 +80,10 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                         variant="outline-warning"
                                         size="sm"
                                         className="mt-2 text-uppercase fw-bold me-2"
-                                        onClick={() => handleEditClick(profile)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleEditClick(profile);
+                                        }}
                                     >
                                         Edit
                                     </Button>
@@ -76,7 +91,10 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                                         variant="outline-danger"
                                         size="sm"
                                         className="mt-2 text-uppercase fw-bold me-2"
-                                        onClick={() => handleDeleteClick(profile)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteClick(profile);
+                                        }}
                                     >
                                         Delete
                                     </Button>
@@ -104,6 +122,13 @@ const HomeCard = ({ profiles = [], onClick, onProfileUpdated }) => {
                 handleClose={() => setShowDeleteModal(false)}
                 handleConfirm={confirmDelete}
                 profileName={profileToDelete?.name}
+            />
+
+            <HomeDetailPanel
+                show={showDetail}
+                handleClose={() => setShowDetail(false)}
+                profileId={selectedProfileId}
+                onProfileClick={onProfileClick}
             />
         </>
     );

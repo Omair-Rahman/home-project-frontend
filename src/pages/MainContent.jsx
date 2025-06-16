@@ -181,7 +181,7 @@ const MainContent = ({ onHomeClick }) => {
       ) : (
         <HomeCard
           profiles={profiles}
-          onClick={onHomeClick}
+          onProfileClick={onHomeClick}
           onProfileUpdated={fetchProfiles}
         />
       )}

@@ -1,36 +1,116 @@
-import React from "react";
-import { Offcanvas, Badge } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { Offcanvas, Image, Spinner, Badge, Button } from 'react-bootstrap';
+import axios from 'axios';
+import Loading from '../components/Loading';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
-const HomeDetailPanel = ({ show, onHide, home }) => {
-    if (!home) return null;
+const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        if (!profileId) return;
+
+        setLoading(true);
+        // var xx = {
+        //     "rating": 3,
+        //     "name": "Omair",
+        //     "profileUrl": "string",
+        //     "image": "Omair.jpg",
+        //     "id": 1,
+        //     "totalCount": 102,
+        //     "chart": [
+        //         {
+        //             "rating": 1,
+        //             "count": 2
+        //         },
+        //         {
+        //             "rating": 2,
+        //             "count": 2
+        //         },
+        //         {
+        //             "rating": 3,
+        //             "count": 2
+        //         },
+        //         {
+        //             "rating": 4,
+        //             "count": 4
+        //         },
+        //         {
+        //             "rating": 5,
+        //             "count": 12
+        //         }
+        //     ]
+        // };
+        axios.get(`http://localhost:5295/api/Profile/${profileId}`)
+            .then(res => {
+                setData(res.data.data);
+            })
+            .catch(err => {
+                console.error("Failed to fetch profile detail", err);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [profileId]);
+
+    console.log("<>", data);
+    
     return (
-        <Offcanvas show={show} onHide={onHide} placement="end">
+        <Offcanvas show={show} onHide={handleClose} placement="end" backdrop={true}>
             <Offcanvas.Header closeButton>
-                <Offcanvas.Title>{home.name}</Offcanvas.Title>
+                <Offcanvas.Title>Profile Detail</Offcanvas.Title>
             </Offcanvas.Header>
             <Offcanvas.Body>
-                <img
-                    src={home.image}
-                    alt={home.name}
-                    className="rounded-circle mb-3"
-                    width="80"
-                />
-                <p>{home.description}</p>
-                <p>
-                    <strong>Location:</strong> {home.location}
-                </p>
-                <p>
-                    <strong>Rate:</strong> {home.rate}/hr
-                </p>
-                <p>
-                    <strong>Subjects:</strong>
-                </p>
-                {home.subjects.map((s, i) => (
-                    <Badge key={i} bg="secondary" className="me-1">
-                        {s}
-                    </Badge>
-                ))}
+                {loading ? (
+                    <div className="text-center mt-5">
+                        {/* <Spinner animation="border" /> */}
+                        <Loading />
+                    </div>
+                ) : data ? (
+                    <>
+                        <Button
+                            variant="outline-warning"
+                            size="sm"
+                            className="mt-2 text-uppercase fw-bold me-2"
+                            onClick={(e) => {
+                                console.log(data.id);
+                                onProfileClick(data);
+                            }}
+                        >
+                            Go to Video Gallery
+                        </Button>
+                        <div className="text-center mb-4">
+                            <Image
+                                src={`data:image/jpeg;base64,${data.imageFile}`}
+                                alt={data.name || 'Profile Image'}
+                                className="rounded me-md-3 mb-3 mb-md-0"
+                                width="50%"
+                                height="30%"
+                            />
+                            <h4 className="mt-3 fw-bold">{data.name}</h4>
+                            <div className="text-muted">
+                                <Badge bg="info">Rating: {data.rating}/5</Badge>
+                            </div>
+                            <div className="text-muted mt-2">
+                                <Badge bg="secondary">Total Videos: {data.totalCount}</Badge>
+                            </div>
+                        </div>
+
+                        <h5 className="text-center mb-3">Video Ratings Chart</h5>
+                        <ResponsiveContainer width="100%" height={250}>
+                            <BarChart data={data.chart}>
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="rating" />
+                                <YAxis />
+                                <Tooltip />
+                                <Bar dataKey="count" fill="#0d6efd" />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </>
+                ) : (
+                    <div className="text-danger text-center">No data found.</div>
+                )}
             </Offcanvas.Body>
         </Offcanvas>
     );

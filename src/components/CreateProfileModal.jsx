@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
 const CreateProfileModal = ({ show, handleClose, onProfileCreated }) => {
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         rating: 0,
@@ -19,6 +20,7 @@ const CreateProfileModal = ({ show, handleClose, onProfileCreated }) => {
     };
 
     const handleSubmit = async (e) => {
+        setSubmitting(true);
         e.preventDefault();
         try {
             const data = new FormData();
@@ -37,8 +39,21 @@ const CreateProfileModal = ({ show, handleClose, onProfileCreated }) => {
             handleClose();
         } catch (error) {
             console.error('Error creating profile:', error);
+        } finally {
+            setSubmitting(false);
         }
     };
+
+    useEffect(() => {
+        if (!show) {
+            setFormData({
+                name: '',
+                rating: 0,
+                profileLink: '',
+                image: null,
+            });
+        }
+    }, [show]);
 
     return (
         <Modal show={show} onHide={handleClose}>
@@ -87,14 +102,17 @@ const CreateProfileModal = ({ show, handleClose, onProfileCreated }) => {
                             accept="image/*"
                             onChange={handleChange}
                         />
+                        <Form.Text className="text-muted">
+                            {formData.image ? formData.image.name : 'No file selected'}
+                        </Form.Text>
                     </Form.Group>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" type="submit">
-                        Create
+                    <Button variant="primary" type="submit" disabled={submitting}>
+                        {submitting ? 'Creating...' : 'Create'}
                     </Button>
                 </Modal.Footer>
             </Form>

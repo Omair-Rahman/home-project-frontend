@@ -3,6 +3,7 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 
 const UpdateProfileModal = ({ show, handleClose, profile, onProfileUpdated }) => {
+    const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         rating: 0,
@@ -21,6 +22,17 @@ const UpdateProfileModal = ({ show, handleClose, profile, onProfileUpdated }) =>
         }
     }, [profile]);
 
+    useEffect(() => {
+        if (!show) {
+            setFormData({
+                name: '',
+                rating: 0,
+                profileLink: '',
+                image: null
+            });
+        }
+    }, [show]);
+
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         setFormData((prev) => ({
@@ -30,6 +42,7 @@ const UpdateProfileModal = ({ show, handleClose, profile, onProfileUpdated }) =>
     };
 
     const handleSubmit = async (e) => {
+        setSubmitting(true);
         e.preventDefault();
         try {
             const data = new FormData();
@@ -55,6 +68,8 @@ const UpdateProfileModal = ({ show, handleClose, profile, onProfileUpdated }) =>
             handleClose();
         } catch (error) {
             console.error('Error updating profile:', error);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -111,8 +126,8 @@ const UpdateProfileModal = ({ show, handleClose, profile, onProfileUpdated }) =>
                     <Button variant="secondary" onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="primary" type="submit">
-                        Update
+                    <Button variant="primary" type="submit" disabled={submitting}>
+                        {submitting ? 'Updating...' : 'Update'}
                     </Button>
                 </Modal.Footer>
             </Form>

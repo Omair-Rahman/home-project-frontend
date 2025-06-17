@@ -26,27 +26,27 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
     //     "profileUrl": "string",
     //     "image": "Omair.jpg",
     //     "id": 1,
-    //     "totalCount": 102,
+    //     "totalMediaContents": 102,
     //     "chart": [
     //         {
     //             "rating": 1,
-    //             "count": 2
+    //             "totalMediaContents": 2
     //         },
     //         {
     //             "rating": 2,
-    //             "count": 2
+    //             "totalMediaContents": 2
     //         },
     //         {
     //             "rating": 3,
-    //             "count": 2
+    //             "totalMediaContents": 2
     //         },
     //         {
     //             "rating": 4,
-    //             "count": 4
+    //             "totalMediaContents": 4
     //         },
     //         {
     //             "rating": 5,
-    //             "count": 12
+    //             "totalMediaContents": 12
     //         }
     //     ]
     // };
@@ -101,7 +101,7 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
                 <Badge bg="info">Rating: {data.rating}/5</Badge>
               </div>
               <div className="text-muted mt-2">
-                <Badge bg="secondary">Total Videos: {data.totalCount}</Badge>
+                <Badge bg="secondary">Total Videos: {data.totalMediaContents}</Badge>
               </div>
             </div>
 
@@ -112,7 +112,7 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
                 <XAxis dataKey="rating" />
                 <YAxis />
                 <Tooltip />
-                <Bar dataKey="count" fill="#0d6efd" />
+                <Bar dataKey="totalMediaContents" fill="#0d6efd" />
               </BarChart>
             </ResponsiveContainer>
           </>

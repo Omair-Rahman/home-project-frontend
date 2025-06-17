@@ -1,5 +1,5 @@
-import React from "react";
-import { Nav } from "react-bootstrap";
+import React from 'react';
+import { Nav } from 'react-bootstrap';
 import JellyfishSpinner from '../components/JellyfishSpinner';
 
 const Sidebar = ({ onMenuClick }) => (
@@ -16,16 +16,17 @@ const Sidebar = ({ onMenuClick }) => (
         className="text-uppercase text-white fw-bold"
         onClick={(e) => {
           e.preventDefault();
-          onMenuClick("homes");
-        }}>
+          onMenuClick('homes');
+        }}
+      >
         Homes
       </Nav.Link>
       <Nav.Link
         className="text-uppercase text-white fw-bold"
-        onClick={() => onMenuClick("videos")}>
+        onClick={() => onMenuClick('videos')}
+      >
         Videos
       </Nav.Link>
-
     </Nav>
     <hr className="border-white" />
   </div>

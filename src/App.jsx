@@ -1,36 +1,21 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Container, Row, Col } from "react-bootstrap";
-import Sidebar from "./components/Sidebar";
-import MainContent from "./pages/MainContent";
-import VideoPage from "./pages/VideoPage";
-import HomeDetailPanel from "./components/HomeDetailPanel";
+import React, { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Container, Row, Col } from 'react-bootstrap';
+import Sidebar from './components/Sidebar';
+import MainContent from './pages/MainContent';
+import VideoPage from './pages/VideoPage';
 
 export default function App() {
-  const [selectedHome, setSelectedHome] = useState(null);
-  const [showDetail, setShowDetail] = useState(false);
-  const [page, setPage] = useState("homes");
+  const [page, setPage] = useState('homes');
   const [profileId, setProfileId] = useState(null);
 
-  const handleHomeClick = (home) => {
-    setSelectedHome(home);
-    setProfileId(home.id);
-    setPage("videos");
-    setShowDetail(false);
-  };
-
-  const handleClose = () => setShowDetail(false);
-
-  const handleMenuClick = (menuKey) => {
-    setPage(menuKey);
-    if (menuKey === "videos") {
-      setProfileId(null);
-    }
-    setShowDetail(false);
+  const handleHomeClick = (profileId) => {
+    setProfileId(profileId);
+    setPage('videos');
   };
 
   const renderContent = () => {
-    if (page === "videos") return <VideoPage profileId={profileId} />;
+    if (page === 'videos') return <VideoPage profileId={profileId} />;
     return <MainContent onHomeClick={handleHomeClick} />;
   };
 
@@ -44,7 +29,6 @@ export default function App() {
           {renderContent()}
         </Col>
       </Row>
-      {/* <HomeDetailPanel show={showDetail} onHide={handleClose} home={selectedHome} /> */}
     </Container>
   );
 }

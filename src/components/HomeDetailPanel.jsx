@@ -51,7 +51,7 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
     //     ]
     // };
     axios
-      .get(`http://localhost:5295/api/Profile/${profileId}`)
+      .get(`http://localhost:5295/api/Profile/${profileId}/details`)
       .then((res) => {
         setData(res.data.data);
       })

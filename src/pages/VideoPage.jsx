@@ -1,37 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Row, Col } from 'react-bootstrap';
-import VideoCard from '../components/VideoCard';
-import VideoDetailPanel from '../components/VideoDetailPanel';
-import Loading from '../components/Loading';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Row, Col, Button } from "react-bootstrap";
+import VideoCard from "../components/VideoCard";
+import VideoDetailPanel from "../components/VideoDetailPanel";
+import CreateVideoModal from "../components/CreateVideoModal";
+import Loading from "../components/Loading";
 
 const VideoPage = ({ profileId }) => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [showUploadModal, setShowUploadModal] = useState(false);
+
+  const fetchVideos = async () => {
+    setLoading(true);
+    try {
+      const url = profileId
+        ? `http://localhost:5295/api/Media/contents/${profileId}`
+        : `http://localhost:5295/api/Media/contents`;
+
+      const res = await axios.get(url);
+      if (res.data?.status) {
+        setVideos(res.data.data || []);
+      } else {
+        console.error("API responded with error:", res.data?.message);
+      }
+    } catch (err) {
+      console.error("Video fetch failed:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchVideos = async () => {
-      setLoading(true);
-      try {
-        const url = profileId
-          ? `http://localhost:5295/api/Media/contents/${profileId}`
-          : `http://localhost:5295/api/Media/contents`;
-
-        const res = await axios.get(url);
-        if (res.data?.status) {
-          setVideos(res.data.data || []);
-        } else {
-          console.error("API responded with error:", res.data?.message);
-        }
-      } catch (err) {
-        console.error('Video fetch failed:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchVideos();
   }, [profileId]);
 
@@ -43,6 +45,14 @@ const VideoPage = ({ profileId }) => {
   return (
     <div className="p-4">
       <h5 className="fw-bold mb-4">Video Gallery</h5>
+
+      <Button
+        variant="outline-primary"
+        className="mb-3 fw-bold text-uppercase"
+        onClick={() => setShowUploadModal(true)}
+      >
+        Upload New Video
+      </Button>
 
       {loading ? (
         <Loading />
@@ -61,7 +71,13 @@ const VideoPage = ({ profileId }) => {
       <VideoDetailPanel
         show={showDetail}
         onHide={() => setShowDetail(false)}
-        videoId={selectedVideo.id}
+        videoId={selectedVideo?.id}
+      />
+
+      <CreateVideoModal
+        show={showUploadModal}
+        handleClose={() => setShowUploadModal(false)}
+        onVideoUploaded={fetchVideos}
       />
     </div>
   );

@@ -61,7 +61,7 @@ const VideoPage = ({ profileId }) => {
       <VideoDetailPanel
         show={showDetail}
         onHide={() => setShowDetail(false)}
-        video={selectedVideo}
+        videoId={selectedVideo.id}
       />
     </div>
   );

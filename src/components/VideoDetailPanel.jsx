@@ -1,45 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { Offcanvas, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from "react";
+import { Offcanvas, Button } from "react-bootstrap";
+import axios from "axios";
 
-const VideoDetailPanel = ({ show, onHide, video }) => {
-  const [videoUrl, setVideoUrl] = useState(null);
+const VideoDetailPanel = ({ show, onHide, videoId }) => {
+  const [video, setVideo] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!video) {
-      setVideoUrl(null);
+    if (!videoId) {
+      setVideo(null);
       return;
     }
 
-    // Fetch video content as Blob from your API
-    const fetchVideoContent = async () => {
+    const fetchVideo = async () => {
+      setLoading(true);
       try {
-        // `https://your-backend-api.com/full/content/${video.id}`
-        const response = await fetch(
-          `http://localhost:5295/api/Media/full/content/1`
+        const response = await axios.get(
+          `http://localhost:5295/api/Media/full/content/${videoId}`
         );
-        if (!response.ok) throw new Error('Failed to fetch video content');
 
-        const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
-        setVideoUrl(url);
+        if (response.data.status) {
+          setVideo(response.data.data);
+        } else {
+          console.error("API responded with an error:", response.data.message);
+        }
       } catch (error) {
-        console.error(error);
-        setVideoUrl(null);
+        console.error("Error fetching video:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchVideoContent();
+    fetchVideo();
+  }, [videoId]);
 
-    // Cleanup: revoke object URL when component unmounts or video changes
-    return () => {
-      if (videoUrl) {
-        URL.revokeObjectURL(videoUrl);
-        setVideoUrl(null);
-      }
-    };
-  }, [video]);
+  if (!videoId || (!video && !loading)) return null;
 
-  if (!video) return null;
+  const videoSrc = video ? `http://localhost:5295${video.fullPath}` : "";
 
   return (
     <Offcanvas
@@ -49,28 +46,42 @@ const VideoDetailPanel = ({ show, onHide, video }) => {
       className="wide-offcanvas"
     >
       <Offcanvas.Header closeButton>
-        <Offcanvas.Title>{video.title}</Offcanvas.Title>
+        <Offcanvas.Title>
+          {video?.title || `Video ID #${video?.id || videoId}`}
+        </Offcanvas.Title>
       </Offcanvas.Header>
+
       <Offcanvas.Body>
-        <p className="mb-3">{video.description}</p>
-        <p className="mb-3">
-          <strong>Author:</strong> {video.author || 'Unknown'}
-        </p>
-
-        {videoUrl ? (
-          <video controls width="100%" src={videoUrl} />
+        {loading ? (
+          <p>Loading video details...</p>
         ) : (
-          <p>Loading video...</p>
-        )}
+          <>
+            {video?.description && <p className="mb-3">{video.description}</p>}
+            <p className="mb-3">
+              <strong>Uploaded by:</strong> {video?.profileName || "Unknown"}
+            </p>
 
-        <Button
-          variant="primary"
-          // onClick={() => onLoadAuthorVideos(video.author)}
-          disabled={!video.author}
-          className="mt-3"
-        >
-          View more from {video.author || 'Unknown'}
-        </Button>
+            <video
+              controls
+              width="100%"
+              src={videoSrc}
+              type={video?.contentType}
+            >
+              Your browser does not support the video tag.
+            </video>
+
+            <Button
+              variant="primary"
+              className="mt-3"
+              disabled={!video?.profileId}
+              onClick={() => {
+                console.log(`Load more from profile ID: ${video.profileId}`);
+              }}
+            >
+              View more from {video?.profileName || "Unknown"}
+            </Button>
+          </>
+        )}
       </Offcanvas.Body>
     </Offcanvas>
   );

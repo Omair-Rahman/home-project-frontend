@@ -20,36 +20,7 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
     if (!profileId) return;
 
     setLoading(true);
-    // var xx = {
-    //     "rating": 3,
-    //     "name": "Omair",
-    //     "profileUrl": "string",
-    //     "image": "Omair.jpg",
-    //     "id": 1,
-    //     "totalMediaContents": 102,
-    //     "chart": [
-    //         {
-    //             "rating": 1,
-    //             "totalMediaContents": 2
-    //         },
-    //         {
-    //             "rating": 2,
-    //             "totalMediaContents": 2
-    //         },
-    //         {
-    //             "rating": 3,
-    //             "totalMediaContents": 2
-    //         },
-    //         {
-    //             "rating": 4,
-    //             "totalMediaContents": 4
-    //         },
-    //         {
-    //             "rating": 5,
-    //             "totalMediaContents": 12
-    //         }
-    //     ]
-    // };
+    
     axios
       .get(`http://localhost:5295/api/Profile/${profileId}/details`)
       .then((res) => {
@@ -62,8 +33,6 @@ const HomeDetailPanel = ({ show, handleClose, profileId, onProfileClick }) => {
         setLoading(false);
       });
   }, [profileId]);
-
-  console.log('<>', data);
 
   return (
     <Offcanvas show={show} onHide={handleClose} placement="end" backdrop={true}>

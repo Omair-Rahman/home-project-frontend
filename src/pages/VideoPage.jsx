@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 import { Row, Col, Button, Form } from "react-bootstrap";
 import { motion } from "framer-motion";
 import VideoCard from "../components/videos/VideoCard";
@@ -7,7 +8,9 @@ import VideoDetailPanel from "../components/videos/VideoDetailPanel";
 import CreateVideoModal from "../components/videos/CreateVideoModal";
 import Loading from "../components/common/Loading";
 
-const VideoPage = ({ profileId: initialProfileId }) => {
+const VideoPage = () => {
+  const navigate = useNavigate();
+  const { profileId: paramProfileId } = useParams();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -16,7 +19,7 @@ const VideoPage = ({ profileId: initialProfileId }) => {
   const [profileOptions, setProfileOptions] = useState([]);
 
   const [filters, setFilters] = useState({
-    profileId: initialProfileId || "",
+    profileId: paramProfileId || "",
     isFavourite: "",
     rating: "",
   });
@@ -56,21 +59,18 @@ const VideoPage = ({ profileId: initialProfileId }) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchProfiles();
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchVideos();
-  // }, [filters.profileId]);
+  useEffect(() => {
+    fetchProfiles();
+  }, []);
 
   useEffect(() => {
     setFilters({
-      profileId: initialProfileId || "",
+      profileId: paramProfileId || "",
       isFavourite: "",
       rating: "",
     });
-  }, [initialProfileId]);
+    fetchVideos();
+  }, [paramProfileId]);
 
   const handleVideoClick = (video) => {
     setSelectedVideo(video);
@@ -80,7 +80,7 @@ const VideoPage = ({ profileId: initialProfileId }) => {
   const resetFilters = () => {
     setFilters((prev) => ({
       ...prev,
-      profileId: initialProfileId || "",
+      profileId: paramProfileId || "",
       isFavourite: "",
       rating: "",
     }));
@@ -91,136 +91,146 @@ const VideoPage = ({ profileId: initialProfileId }) => {
   };
 
   return (
-    <div className="p-4">
-      <h5 className="fw-bold mb-4">Video Gallery</h5>
-
-      <div className="d-flex flex-wrap align-items-end gap-2 mb-3">
-        <Button
-          variant="outline-primary"
-          className="fw-bold text-uppercase"
-          onClick={() => setShowUploadModal(true)}
-        >
-          Upload New Video
-        </Button>
-      </div>
-
-      <motion.div
-        className="d-flex flex-wrap align-items-center gap-3 mb-4 pt-3 bg-light rounded-3 shadow-sm"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
+    <>
+      <Button
+        variant="link"
+        className="text-uppercase fw-bold"
+        onClick={() => navigate("/homes")}
       >
-        <Form className="mb-4">
-          <Row className="g-3">
-            {!initialProfileId && (
-              <Col md={4}>
+        &larr; Back to Homes
+      </Button>
+
+      <div className="p-4">
+        <h5 className="fw-bold mb-4">Video Gallery</h5>
+
+        <div className="d-flex flex-wrap align-items-end gap-2 mb-3">
+          <Button
+            variant="outline-primary"
+            className="fw-bold text-uppercase"
+            onClick={() => setShowUploadModal(true)}
+          >
+            Upload New Video
+          </Button>
+        </div>
+
+        <motion.div
+          className="d-flex flex-wrap align-items-center gap-3 mb-4 pt-3 bg-light rounded-3 shadow-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <Form className="mb-4">
+            <Row className="g-3">
+              {!paramProfileId && (
+                <Col md={4}>
+                  <Form.Group>
+                    <Form.Label>Profile</Form.Label>
+                    <Form.Select
+                      value={filters.profileId}
+                      onChange={(e) =>
+                        setFilters({ ...filters, profileId: e.target.value })
+                      }
+                    >
+                      <option value="">All Profiles</option>
+                      {profileOptions.map((p) => (
+                        <option key={p.id} value={p.id}>
+                          {p.name}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                </Col>
+              )}
+
+              <Col md={paramProfileId ? 6 : 4}>
                 <Form.Group>
-                  <Form.Label>Profile</Form.Label>
+                  <Form.Label>Favourite</Form.Label>
                   <Form.Select
-                    value={filters.profileId}
+                    value={filters.isFavourite}
                     onChange={(e) =>
-                      setFilters({ ...filters, profileId: e.target.value })
+                      setFilters({ ...filters, isFavourite: e.target.value })
                     }
                   >
-                    <option value="">All Profiles</option>
-                    {profileOptions.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name}
+                    <option value="">All</option>
+                    <option value="true">Favourites</option>
+                    <option value="false">Non-Favourites</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
+              <Col md={paramProfileId ? 6 : 4}>
+                <Form.Group>
+                  <Form.Label>Rating</Form.Label>
+                  <Form.Select
+                    value={filters.rating}
+                    onChange={(e) =>
+                      setFilters({ ...filters, rating: e.target.value })
+                    }
+                  >
+                    <option value="">All Ratings</option>
+                    {[1, 2, 3, 4, 5].map((r) => (
+                      <option key={r} value={r}>
+                        {r} Star{r > 1 && "s"}
                       </option>
                     ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
-            )}
+            </Row>
 
-            <Col md={initialProfileId ? 6 : 4}>
-              <Form.Group>
-                <Form.Label>Favourite</Form.Label>
-                <Form.Select
-                  value={filters.isFavourite}
-                  onChange={(e) =>
-                    setFilters({ ...filters, isFavourite: e.target.value })
-                  }
-                >
-                  <option value="">All</option>
-                  <option value="true">Favourites</option>
-                  <option value="false">Non-Favourites</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
+            <div className="mt-3 d-flex gap-2">
+              <Button
+                variant="outline-primary"
+                className="text-uppercase fw-bold"
+                onClick={fetchVideos}
+              >
+                Apply Filters
+              </Button>
+              <Button
+                variant="outline-secondary"
+                className="text-uppercase fw-bold"
+                onClick={resetFilters}
+              >
+                Reset
+              </Button>
+              <Button
+                variant="outline-success"
+                className="text-uppercase fw-bold"
+                onClick={refresh}
+              >
+                Refresh
+              </Button>
+            </div>
+          </Form>
+        </motion.div>
 
-            <Col md={initialProfileId ? 6 : 4}>
-              <Form.Group>
-                <Form.Label>Rating</Form.Label>
-                <Form.Select
-                  value={filters.rating}
-                  onChange={(e) =>
-                    setFilters({ ...filters, rating: e.target.value })
-                  }
-                >
-                  <option value="">All Ratings</option>
-                  {[1, 2, 3, 4, 5].map((r) => (
-                    <option key={r} value={r}>
-                      {r} Star{r > 1 && "s"}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
+        {loading ? (
+          <Loading />
+        ) : videos.length === 0 ? (
+          <div className="text-muted mt-3">No videos found.</div>
+        ) : (
+          <Row className="d-flex flex-wrap">
+            {videos.map((video) => (
+              <Col key={video.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
+                <VideoCard video={video} onClick={handleVideoClick} />
+              </Col>
+            ))}
           </Row>
+        )}
 
-          <div className="mt-3 d-flex gap-2">
-            <Button
-              variant="outline-primary"
-              className="text-uppercase fw-bold"
-              onClick={fetchVideos}
-            >
-              Apply Filters
-            </Button>
-            <Button
-              variant="outline-secondary"
-              className="text-uppercase fw-bold"
-              onClick={resetFilters}
-            >
-              Reset
-            </Button>
-            <Button
-              variant="outline-success"
-              className="text-uppercase fw-bold"
-              onClick={refresh}
-            >
-              Refresh
-            </Button>
-          </div>
-        </Form>
-      </motion.div>
+        <VideoDetailPanel
+          show={showDetail}
+          onHide={() => setShowDetail(false)}
+          videoId={selectedVideo?.id}
+        />
 
-      {loading ? (
-        <Loading />
-      ) : videos.length === 0 ? (
-        <div className="text-muted mt-3">No videos found.</div>
-      ) : (
-        <Row className="d-flex flex-wrap">
-          {videos.map((video) => (
-            <Col key={video.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-              <VideoCard video={video} onClick={handleVideoClick} />
-            </Col>
-          ))}
-        </Row>
-      )}
-
-      <VideoDetailPanel
-        show={showDetail}
-        onHide={() => setShowDetail(false)}
-        videoId={selectedVideo?.id}
-      />
-
-      <CreateVideoModal
-        show={showUploadModal}
-        handleClose={() => setShowUploadModal(false)}
-        onVideoUploaded={fetchVideos}
-      />
-    </div>
+        <CreateVideoModal
+          show={showUploadModal}
+          handleClose={() => setShowUploadModal(false)}
+          onVideoUploaded={fetchVideos}
+        />
+      </div>
+    </>
   );
 };
 

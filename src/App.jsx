@@ -1,34 +1,34 @@
-import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row, Col } from "react-bootstrap";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Sidebar from "./components/Sidebar";
 import MainContent from "./pages/MainContent";
 import VideoPage from "./pages/VideoPage";
 
 export default function App() {
-  const [page, setPage] = useState("homes");
-  const [profileId, setProfileId] = useState(null);
-
-  const handleHomeClick = (profileId) => {
-    setProfileId(profileId);
-    setPage("videos");
-  };
-
-  const renderContent = () => {
-    if (page === "videos") return <VideoPage profileId={profileId} />;
-    return <MainContent onHomeClick={handleHomeClick} />;
-  };
-
   return (
-    <Container fluid>
-      <Row>
-        <Col xs={12} md={2} className="bg-primary text-white">
-          <Sidebar onMenuClick={setPage} currentPage={page} />
-        </Col>
-        <Col xs={12} md={10} className="bg-light min-vh-100">
-          {renderContent()}
-        </Col>
-      </Row>
-    </Container>
+    <Router>
+      <Container fluid>
+        <Row>
+          <Col xs={12} md={2} className="bg-primary text-white">
+            <Sidebar />
+          </Col>
+          <Col xs={12} md={10} className="bg-light min-vh-100">
+            <Routes>
+              <Route path="/" element={<Navigate to="/homes" replace />} />
+              <Route path="/homes" element={<MainContent />} />
+              <Route path="/videos" element={<VideoPage />} />
+              <Route path="/videos/:profileId" element={<VideoPage />} />
+              <Route path="*" element={<Navigate to="/homes" replace />} />
+            </Routes>
+          </Col>
+        </Row>
+      </Container>
+    </Router>
   );
 }

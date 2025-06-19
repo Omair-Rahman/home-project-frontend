@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { Button, Spinner, Form } from "react-bootstrap";
 import HomeCard from "../components/profiles/HomeCard";
 import { motion } from "framer-motion";
@@ -7,6 +8,7 @@ import CreateProfileModal from "../components/profiles/CreateProfileModal";
 import Loading from "../components/common/Loading";
 
 const MainContent = ({ onHomeClick }) => {
+  const navigate = useNavigate();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -52,6 +54,10 @@ const MainContent = ({ onHomeClick }) => {
       ItemsPerPage: 10,
       IsActive: true,
     });
+  };
+
+  const handleHomeClick = (profileId) => {
+    navigate(`/videos/${profileId}`);
   };
 
   return (
@@ -181,7 +187,7 @@ const MainContent = ({ onHomeClick }) => {
       ) : (
         <HomeCard
           profiles={profiles}
-          onProfileClick={onHomeClick}
+          onProfileClick={handleHomeClick}
           onProfileUpdated={fetchProfiles}
         />
       )}

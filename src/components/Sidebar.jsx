@@ -1,5 +1,6 @@
 import React from "react";
 import { Nav } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import JellyfishSpinner from "./common/JellyfishSpinner";
 
 const Sidebar = ({ onMenuClick, currentPage }) => (
@@ -13,21 +14,16 @@ const Sidebar = ({ onMenuClick, currentPage }) => (
     <hr className="border-white" />
     <Nav className="flex-column p-3">
       <Nav.Link
-        className={`text-uppercase fw-bold ${
-          currentPage === "homes" ? "text-warning" : "text-white"
-        }`}
-        onClick={(e) => {
-          e.preventDefault();
-          onMenuClick("homes");
-        }}
+        as={NavLink}
+        to="/homes"
+        className={`text-uppercase fw-bold text-white`}
       >
         Homes
       </Nav.Link>
       <Nav.Link
-        className={`text-uppercase fw-bold ${
-          currentPage === "videos" ? "text-warning" : "text-white"
-        }`}
-        onClick={() => onMenuClick("videos")}
+        as={NavLink}
+        to="/videos"
+        className={`text-uppercase fw-bold text-white`}
       >
         Videos
       </Nav.Link>

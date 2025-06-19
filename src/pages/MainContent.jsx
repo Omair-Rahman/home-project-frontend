@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Spinner, Form } from 'react-bootstrap';
-import HomeCard from '../components/HomeCard';
+import HomeCard from '../components/profiles/HomeCard';
 import { motion } from 'framer-motion';
-import CreateProfileModal from '../components/CreateProfileModal';
-import Loading from '../components/Loading';
+import CreateProfileModal from '../components/profiles/CreateProfileModal';
+import Loading from '../components/common/Loading';
 
 const MainContent = ({ onHomeClick }) => {
   const [profiles, setProfiles] = useState([]);

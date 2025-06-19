@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Spinner } from "react-bootstrap";
-import Loading from "../components/Loading";
+import Loading from "../common/Loading";
 import axios from "axios";
 
 const CreateVideoModal = ({ show, handleClose, onVideoUploaded }) => {

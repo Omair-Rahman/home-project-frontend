@@ -1,4 +1,4 @@
-import '../styles/css/Loading.css';
+import '../../styles/css/Loading.css';
 
 const Loading = () => {
   return <div className="spinner"></div>;

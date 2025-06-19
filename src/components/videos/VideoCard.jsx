@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Card, Button } from "react-bootstrap";
 import { Mic, MicOff } from "lucide-react";
-import HeartButton from "../components/HeartButton";
+import HeartButton from "../common/HeartButton";
 
 const VideoCard = ({ video, onClick }) => {
   const [isMuted, setIsMuted] = useState(true);

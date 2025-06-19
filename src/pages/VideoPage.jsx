@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Row, Col, Button } from "react-bootstrap";
-import VideoCard from "../components/VideoCard";
-import VideoDetailPanel from "../components/VideoDetailPanel";
-import CreateVideoModal from "../components/CreateVideoModal";
-import Loading from "../components/Loading";
+import VideoCard from "../components/videos/VideoCard";
+import VideoDetailPanel from "../components/videos/VideoDetailPanel";
+import CreateVideoModal from "../components/videos/CreateVideoModal";
+import Loading from "../components/common/Loading";
 
 const VideoPage = ({ profileId }) => {
   const [videos, setVideos] = useState([]);

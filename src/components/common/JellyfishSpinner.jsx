@@ -1,4 +1,4 @@
-import '../styles/css/JellyfishSpinner.css';
+import '../../styles/css/JellyfishSpinner.css';
 
 const JellyfishSpinner = () => {
   return (

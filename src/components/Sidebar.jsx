@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
-import JellyfishSpinner from '../components/JellyfishSpinner';
+import JellyfishSpinner from './common/JellyfishSpinner';
 
 const Sidebar = ({ onMenuClick }) => (
   <div className="bg-primary text-white p-3 h-100">

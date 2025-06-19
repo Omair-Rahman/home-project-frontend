@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Card, Badge, Button } from 'react-bootstrap';
-import UpdateProfileModal from '../components/UpdateProfileModal';
-import ConfirmDeleteModal from '../components/ConfirmDeleteModal';
-import HomeDetailPanel from '../components/HomeDetailPanel';
+import UpdateProfileModal from './UpdateProfileModal';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import HomeDetailPanel from './HomeDetailPanel';
 import axios from 'axios';
 
 const HomeCard = ({ profiles = [], onProfileClick, onProfileUpdated }) => {

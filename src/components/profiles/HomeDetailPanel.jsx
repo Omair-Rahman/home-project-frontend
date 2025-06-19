@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Offcanvas, Image, Spinner, Badge, Button } from 'react-bootstrap';
 import axios from 'axios';
-import Loading from '../components/Loading';
+import Loading from '../common/Loading';
 import {
   BarChart,
   Bar,

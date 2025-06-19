@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Button, Spinner, Form } from 'react-bootstrap';
-import HomeCard from '../components/profiles/HomeCard';
-import { motion } from 'framer-motion';
-import CreateProfileModal from '../components/profiles/CreateProfileModal';
-import Loading from '../components/common/Loading';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Button, Spinner, Form } from "react-bootstrap";
+import HomeCard from "../components/profiles/HomeCard";
+import { motion } from "framer-motion";
+import CreateProfileModal from "../components/profiles/CreateProfileModal";
+import Loading from "../components/common/Loading";
 
 const MainContent = ({ onHomeClick }) => {
   const [profiles, setProfiles] = useState([]);
@@ -12,8 +12,8 @@ const MainContent = ({ onHomeClick }) => {
   const [showModal, setShowModal] = useState(false);
   const [totalPages, setTotalPages] = useState(1);
   const [queryParams, setQueryParams] = useState({
-    Name: '',
-    Rating: '',
+    Name: "",
+    Rating: "",
     PageNumber: 1,
     ItemsPerPage: 10,
     IsActive: true,
@@ -22,7 +22,7 @@ const MainContent = ({ onHomeClick }) => {
   const fetchProfiles = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('http://localhost:5295/api/Profile', {
+      const response = await axios.get("http://localhost:5295/api/Profile", {
         params: {
           ...queryParams,
           Name: queryParams.Name || undefined,
@@ -34,7 +34,7 @@ const MainContent = ({ onHomeClick }) => {
       setProfiles(items);
       setTotalPages(totalPages);
     } catch (error) {
-      console.error('Failed to fetch profiles:', error);
+      console.error("Failed to fetch profiles:", error);
     } finally {
       setLoading(false);
     }
@@ -46,8 +46,8 @@ const MainContent = ({ onHomeClick }) => {
 
   const resetPagination = () => {
     setQueryParams({
-      Name: '',
-      Rating: '',
+      Name: "",
+      Rating: "",
       PageNumber: 1,
       ItemsPerPage: 10,
       IsActive: true,
@@ -104,7 +104,7 @@ const MainContent = ({ onHomeClick }) => {
         <div className="d-flex align-items-center gap-2">
           <Form.Label className="mb-0 fw-semibold">Items per page:</Form.Label>
           <Form.Select
-            style={{ width: '100px', minWidth: '100px' }}
+            style={{ width: "100px", minWidth: "100px" }}
             value={queryParams.ItemsPerPage}
             onChange={(e) =>
               setQueryParams((prev) => ({

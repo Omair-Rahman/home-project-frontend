@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import axios from "axios";
 
@@ -6,26 +6,27 @@ const HeartButton = ({ videoId, initialFavourite }) => {
   const [isFavourite, setIsFavourite] = useState(initialFavourite);
   const [loading, setLoading] = useState(false);
 
-  const toggleFavourite = async () => {
-    try {
-      setLoading(true);
-      const nextFavourite = !isFavourite;
+  useEffect(() => {
+    setIsFavourite(initialFavourite);
+  }, [initialFavourite]);
 
+  const toggleFavourite = async () => {
+    const nextFavourite = !isFavourite;
+    setIsFavourite(nextFavourite);
+    setLoading(true);
+
+    try {
       const res = await axios.put(
         `http://localhost:5295/api/Media/${videoId}/${nextFavourite}`,
         null,
         {
-          headers: {
-            accept: "*/*",
-          },
+          headers: { accept: "*/*" },
         }
       );
-
-      if (res.status === 200) {
-        setIsFavourite(nextFavourite);
-      }
+      if (res.status !== 200) throw new Error("Update failed");
     } catch (err) {
       console.error("Failed to toggle favorite:", err);
+      setIsFavourite(!nextFavourite);
     } finally {
       setLoading(false);
     }
@@ -35,14 +36,16 @@ const HeartButton = ({ videoId, initialFavourite }) => {
     <button
       onClick={toggleFavourite}
       disabled={loading}
+      aria-label={isFavourite ? "Remove from favorites" : "Add to favorites"}
+      title={isFavourite ? "Remove from favorites" : "Add to favorites"}
       style={{
         background: "transparent",
         border: "none",
-        cursor: "pointer",
+        cursor: loading ? "not-allowed" : "pointer",
         fontSize: "1.5rem",
         color: isFavourite ? "red" : "gray",
+        opacity: loading ? 0.6 : 1,
       }}
-      title={isFavourite ? "Remove from favorites" : "Add to favorites"}
     >
       {isFavourite ? <FaHeart /> : <FaRegHeart />}
     </button>

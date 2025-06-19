@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Row, Col, Button, Form } from 'react-bootstrap';
-import { motion } from 'framer-motion';
-import VideoCard from '../components/videos/VideoCard';
-import VideoDetailPanel from '../components/videos/VideoDetailPanel';
-import CreateVideoModal from '../components/videos/CreateVideoModal';
-import Loading from '../components/common/Loading';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Row, Col, Button, Form } from "react-bootstrap";
+import { motion } from "framer-motion";
+import VideoCard from "../components/videos/VideoCard";
+import VideoDetailPanel from "../components/videos/VideoDetailPanel";
+import CreateVideoModal from "../components/videos/CreateVideoModal";
+import Loading from "../components/common/Loading";
 
 const VideoPage = ({ profileId: initialProfileId }) => {
   const [videos, setVideos] = useState([]);
@@ -16,19 +16,19 @@ const VideoPage = ({ profileId: initialProfileId }) => {
   const [profileOptions, setProfileOptions] = useState([]);
 
   const [filters, setFilters] = useState({
-    profileId: initialProfileId || '',
-    isFavourite: '',
-    rating: '',
+    profileId: initialProfileId || "",
+    isFavourite: "",
+    rating: "",
   });
 
   const fetchProfiles = async () => {
     try {
-      const res = await axios.get('http://localhost:5295/api/Profile/Option');
+      const res = await axios.get("http://localhost:5295/api/Profile/Option");
       if (res.data?.status) {
         setProfileOptions(res.data.data || []);
       }
     } catch (err) {
-      console.error('Profile fetch failed:', err);
+      console.error("Profile fetch failed:", err);
     }
   };
 
@@ -37,32 +37,40 @@ const VideoPage = ({ profileId: initialProfileId }) => {
     try {
       const params = {};
       if (filters.profileId) params.profileId = filters.profileId;
-      if (filters.isFavourite !== '') params.isFavourite = filters.isFavourite;
+      if (filters.isFavourite !== "") params.isFavourite = filters.isFavourite;
       if (filters.rating) params.rating = filters.rating;
 
-      const res = await axios.get('http://localhost:5295/api/Media/contents', {
+      const res = await axios.get("http://localhost:5295/api/Media/contents", {
         params,
       });
 
       if (res.data?.status) {
         setVideos(res.data.data || []);
       } else {
-        console.error('API responded with error:', res.data?.message);
+        console.error("API responded with error:", res.data?.message);
       }
     } catch (err) {
-      console.error('Video fetch failed:', err);
+      console.error("Video fetch failed:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchProfiles();
-  }, []);
+  // useEffect(() => {
+  //   fetchProfiles();
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchVideos();
+  // }, [filters.profileId]);
 
   useEffect(() => {
-    fetchVideos();
-  }, [filters.profileId]);
+    setFilters({
+      profileId: initialProfileId || "",
+      isFavourite: "",
+      rating: "",
+    });
+  }, [initialProfileId]);
 
   const handleVideoClick = (video) => {
     setSelectedVideo(video);
@@ -72,9 +80,9 @@ const VideoPage = ({ profileId: initialProfileId }) => {
   const resetFilters = () => {
     setFilters((prev) => ({
       ...prev,
-      profileId: initialProfileId || '',
-      isFavourite: '',
-      rating: '',
+      profileId: initialProfileId || "",
+      isFavourite: "",
+      rating: "",
     }));
   };
 
@@ -153,7 +161,7 @@ const VideoPage = ({ profileId: initialProfileId }) => {
                   <option value="">All Ratings</option>
                   {[1, 2, 3, 4, 5].map((r) => (
                     <option key={r} value={r}>
-                      {r} Star{r > 1 && 's'}
+                      {r} Star{r > 1 && "s"}
                     </option>
                   ))}
                 </Form.Select>

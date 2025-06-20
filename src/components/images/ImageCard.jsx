@@ -4,7 +4,7 @@ import { BsStars } from "react-icons/bs";
 import axios from "axios";
 import HeartButton from "../common/HeartButton";
 
-const ImageCard = ({ image }) => {
+const ImageCard = ({ image, onClick }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedRating, setSelectedRating] = useState(image.rating || null);
   const [hoveredRating, setHoveredRating] = useState(null);
@@ -50,7 +50,11 @@ const ImageCard = ({ image }) => {
 
   return (
     <>
-      <Card className="mb-3 shadow-sm" style={{ cursor: "pointer" }}>
+      <Card
+        className="mb-3 shadow-sm"
+        style={{ cursor: "pointer" }}
+        onClick={onClick}
+      >
         <Card.Img
           variant="top"
           src={imageSrc}

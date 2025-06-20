@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Loading from "../components/common/Loading";
 import ImageCard from "../components/images/ImageCard";
 import CreateImageModal from "../components/images/CreateImageModal";
+import ImagePreviewModal from "../components/images/ImagePreviewModal";
 
 const ImagePage = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const ImagePage = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [profileOptions, setProfileOptions] = useState([]);
+  const [previewIndex, setPreviewIndex] = useState(null);
 
   const [filters, setFilters] = useState({
     profileId: paramProfileId || "",
@@ -82,6 +84,14 @@ const ImagePage = () => {
 
   const refresh = () => {
     fetchImages();
+  };
+
+  const handlePreview = (index) => {
+    setPreviewIndex(index);
+  };
+
+  const closePreview = () => {
+    setPreviewIndex(null);
   };
 
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -206,9 +216,9 @@ const ImagePage = () => {
           <div className="text-muted mt-3">No images found.</div>
         ) : (
           <Row className="d-flex flex-wrap">
-            {images.map((image) => (
+            {images.map((image, idx) => (
               <Col key={image.id} xs={12} sm={6} md={4} lg={3} className="mb-4">
-                <ImageCard image={image} />
+                <ImageCard image={image} onClick={() => handlePreview(idx)} />
               </Col>
             ))}
           </Row>
@@ -218,6 +228,14 @@ const ImagePage = () => {
           show={showUploadModal}
           handleClose={() => setShowUploadModal(false)}
           onImageUploaded={fetchImages}
+        />
+
+        <ImagePreviewModal
+          show={previewIndex !== null}
+          images={images}
+          currentIndex={previewIndex}
+          setCurrentIndex={setPreviewIndex}
+          onClose={closePreview}
         />
       </div>
     </>

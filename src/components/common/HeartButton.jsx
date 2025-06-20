@@ -17,10 +17,13 @@ const HeartButton = ({ videoId, initialFavourite }) => {
 
     try {
       const res = await axios.put(
-        `http://localhost:5295/api/Media/${videoId}/${nextFavourite}`,
-        null,
+        `http://localhost:5295/api/Media/${videoId}/isFavourite`,
+        nextFavourite,
         {
-          headers: { accept: "*/*" },
+          headers: {
+            accept: "*/*",
+            "Content-Type": "application/json",
+          },
         }
       );
       if (res.status !== 200) throw new Error("Update failed");
@@ -45,6 +48,8 @@ const HeartButton = ({ videoId, initialFavourite }) => {
         fontSize: "1.5rem",
         color: isFavourite ? "red" : "gray",
         opacity: loading ? 0.6 : 1,
+        transition: "transform 0.2s",
+        transform: isFavourite ? "scale(1.2)" : "scale(1)",
       }}
     >
       {isFavourite ? <FaHeart /> : <FaRegHeart />}

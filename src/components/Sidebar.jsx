@@ -3,8 +3,11 @@ import { Nav } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import JellyfishSpinner from "./common/JellyfishSpinner";
 
-const Sidebar = ({ onMenuClick, currentPage }) => (
-  <div className="bg-primary text-white p-3 h-100">
+const Sidebar = () => (
+  <div
+    className="bg-primary text-white p-3 h-100"
+    style={{ minHeight: "100vh" }}
+  >
     <div className="mb-4">
       <h5 className="fw-bold">HOMEhub</h5>
     </div>
@@ -26,6 +29,13 @@ const Sidebar = ({ onMenuClick, currentPage }) => (
         className={`text-uppercase fw-bold text-white`}
       >
         Videos
+      </Nav.Link>
+      <Nav.Link
+        as={NavLink}
+        to="/images"
+        className={`text-uppercase fw-bold text-white`}
+      >
+        Images
       </Nav.Link>
     </Nav>
     <hr className="border-white" />

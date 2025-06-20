@@ -9,6 +9,7 @@ import {
 import Sidebar from "./components/Sidebar";
 import MainContent from "./pages/MainContent";
 import VideoPage from "./pages/VideoPage";
+import ImagePage from "./pages/ImagePage";
 
 export default function App() {
   return (
@@ -22,8 +23,15 @@ export default function App() {
             <Routes>
               <Route path="/" element={<Navigate to="/homes" replace />} />
               <Route path="/homes" element={<MainContent />} />
+
+              {/* Video routes */}
               <Route path="/videos" element={<VideoPage />} />
               <Route path="/videos/:profileId" element={<VideoPage />} />
+
+              {/* Image routes */}
+              <Route path="/images" element={<ImagePage />} />
+              <Route path="/images/:profileId" element={<ImagePage />} />
+
               <Route path="*" element={<Navigate to="/homes" replace />} />
             </Routes>
           </Col>

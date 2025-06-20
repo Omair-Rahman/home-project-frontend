@@ -12,23 +12,6 @@ const ImagePreviewModal = ({
 }) => {
   const image = images[currentIndex];
 
-  const handleKeyDown = (e) => {
-    if (e.key === "ArrowLeft") goPrevious();
-    if (e.key === "ArrowRight") goNext();
-    if (e.key === "Escape") onClose();
-  };
-
-  useEffect(() => {
-    if (show) {
-      document.body.style.overflow = "hidden";
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [show, currentIndex]);
-
   if (!show || !image) return null;
 
   const imageSrc = `data:${image.contentType};base64,${image.fullData}`;
@@ -58,59 +41,6 @@ const ImagePreviewModal = ({
         overflow: "hidden",
       }}
     >
-      {/* Close Button */}
-      <Button
-        variant="light"
-        onClick={onClose}
-        style={{
-          position: "absolute",
-          top: 20,
-          right: 20,
-          zIndex: 10,
-          borderRadius: "50%",
-          padding: "0.5rem 0.6rem",
-        }}
-      >
-        <FaTimes />
-      </Button>
-
-      {/* Left Arrow */}
-      <Button
-        variant="dark"
-        onClick={goPrevious}
-        disabled={currentIndex === 0}
-        style={{
-          position: "absolute",
-          left: 10,
-          top: "50%",
-          transform: "translateY(-50%)",
-          zIndex: 10,
-          fontSize: "2rem",
-          opacity: currentIndex === 0 ? 0.3 : 0.8,
-        }}
-      >
-        <FaArrowLeft />
-      </Button>
-
-      {/* Right Arrow */}
-      <Button
-        variant="dark"
-        onClick={goNext}
-        disabled={currentIndex === images.length - 1}
-        style={{
-          position: "absolute",
-          right: 10,
-          top: "50%",
-          transform: "translateY(-50%)",
-          zIndex: 10,
-          fontSize: "2rem",
-          opacity: currentIndex === images.length - 1 ? 0.3 : 0.8,
-        }}
-      >
-        <FaArrowRight />
-      </Button>
-
-      {/* Image with Zoom & Pan */}
       <TransformWrapper
         initialScale={1}
         minScale={0.5}
@@ -119,44 +49,124 @@ const ImagePreviewModal = ({
         doubleClick={{ mode: "zoomIn" }}
         pinch={{ step: 5 }}
       >
-        <TransformComponent
-          wrapperStyle={{
-            width: "100vw",
-            height: "100vh",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img
-            src={imageSrc}
-            alt={image.title}
-            style={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          />
-        </TransformComponent>
-      </TransformWrapper>
+        {({ zoomIn, zoomOut }) => {
+          const handleKeyDown = (e) => {
+            if (e.key === "ArrowLeft") goPrevious();
+            if (e.key === "ArrowRight") goNext();
+            if (e.key === "ArrowUp") zoomIn();
+            if (e.key === "ArrowDown") zoomOut();
+            if (e.key === "Escape") onClose();
+          };
 
-      {/* Info Overlay */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 20,
-          left: 20,
-          color: "white",
-          backgroundColor: "rgba(0,0,0,0.4)",
-          padding: "10px 15px",
-          borderRadius: "8px",
-          maxWidth: "80%",
+          useEffect(() => {
+            if (show) {
+              document.body.style.overflow = "hidden";
+              window.addEventListener("keydown", handleKeyDown);
+            }
+            return () => {
+              document.body.style.overflow = "";
+              window.removeEventListener("keydown", handleKeyDown);
+            };
+          }, [show, currentIndex]);
+
+          return (
+            <>
+              {/* Close Button */}
+              <Button
+                variant="light"
+                onClick={onClose}
+                style={{
+                  position: "absolute",
+                  top: 20,
+                  right: 20,
+                  zIndex: 10,
+                  borderRadius: "50%",
+                  padding: "0.5rem 0.6rem",
+                }}
+              >
+                <FaTimes />
+              </Button>
+
+              {/* Left Arrow */}
+              <Button
+                variant="dark"
+                onClick={goPrevious}
+                disabled={currentIndex === 0}
+                style={{
+                  position: "absolute",
+                  left: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  fontSize: "2rem",
+                  opacity: currentIndex === 0 ? 0.3 : 0.8,
+                }}
+              >
+                <FaArrowLeft />
+              </Button>
+
+              {/* Right Arrow */}
+              <Button
+                variant="dark"
+                onClick={goNext}
+                disabled={currentIndex === images.length - 1}
+                style={{
+                  position: "absolute",
+                  right: 10,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  fontSize: "2rem",
+                  opacity: currentIndex === images.length - 1 ? 0.3 : 0.8,
+                }}
+              >
+                <FaArrowRight />
+              </Button>
+
+              {/* Image with Zoom & Pan */}
+              <TransformComponent
+                wrapperStyle={{
+                  width: "100vw",
+                  height: "100vh",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <img
+                  src={imageSrc}
+                  alt={image.title}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    objectFit: "contain",
+                    userSelect: "none",
+                    pointerEvents: "none",
+                  }}
+                />
+              </TransformComponent>
+
+              {/* Info Overlay */}
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 20,
+                  left: 20,
+                  color: "white",
+                  backgroundColor: "rgba(0,0,0,0.4)",
+                  padding: "10px 15px",
+                  borderRadius: "8px",
+                  maxWidth: "80%",
+                }}
+              >
+                <div className="fw-bold">{image.title || "Untitled Image"}</div>
+                <div className="small text-light">
+                  {image.description || image.profileName}
+                </div>
+              </div>
+            </>
+          );
         }}
-      >
-        <div className="fw-bold">{image.title || "Untitled Image"}</div>
-        <div className="small text-light">{image.description || image.profileName}</div>
-      </div>
+      </TransformWrapper>
     </div>
   );
 };
